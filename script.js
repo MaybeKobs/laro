@@ -1,41 +1,52 @@
 const canvas = document.getElementById("gameCanvas")
 const ctx = canvas.getContext("2d")
 
+const menu = document.getElementById("menu")
+const gameOverUI = document.getElementById("gameOver")
+const hud = document.getElementById("hud")
+
+function resizeCanvas(){
+canvas.width = window.innerWidth
+canvas.height = window.innerHeight
+}
+
+resizeCanvas()
+window.addEventListener("resize", resizeCanvas)
+
 let score = 0
 let scoreDisplay = document.getElementById("score")
 
+let gameRunning = false
+
 let player = {
-x:400,
-y:520,
-width:40,
-height:40,
-speed:6
+x:window.innerWidth/2,
+y:window.innerHeight-100,
+speed:8
 }
 
-let bullets = []
-let enemies = []
-let stars = []
+let bullets=[]
+let enemies=[]
+let stars=[]
 
-// create stars
-for(let i=0;i<120;i++){
+// stars
+for(let i=0;i<200;i++){
 stars.push({
-x:Math.random()*800,
-y:Math.random()*600,
+x:Math.random()*window.innerWidth,
+y:Math.random()*window.innerHeight,
 size:Math.random()*2
 })
 }
 
-// keyboard
-let keys = {}
+let keys={}
 
 document.addEventListener("keydown",e=>{
 keys[e.key]=true
 
-if(e.key===" "){
+if(e.key===" " && gameRunning){
 bullets.push({
-x:player.x+18,
+x:player.x+20,
 y:player.y,
-speed:8
+speed:10
 })
 }
 })
@@ -44,19 +55,39 @@ document.addEventListener("keyup",e=>{
 keys[e.key]=false
 })
 
-// spawn enemies
+function startGame(){
+
+menu.style.display="none"
+canvas.style.display="block"
+hud.style.display="block"
+
+gameRunning=true
+}
+
+function restartGame(){
+location.reload()
+}
+
+// slower enemies
 setInterval(()=>{
+
+if(gameRunning){
+
 enemies.push({
-x:Math.random()*760,
+x:Math.random()*canvas.width,
 y:-40,
 size:40,
-speed:2+Math.random()*2
+speed:1
 })
-},1000)
+
+}
+
+},1500)
 
 function drawPlayer(){
 
 ctx.fillStyle="cyan"
+
 ctx.beginPath()
 
 ctx.moveTo(player.x,player.y)
@@ -73,14 +104,16 @@ function drawStars(){
 ctx.fillStyle="white"
 
 stars.forEach(star=>{
+
 ctx.fillRect(star.x,star.y,star.size,star.size)
 
-star.y+=1
+star.y+=0.7
 
-if(star.y>600){
+if(star.y>canvas.height){
 star.y=0
-star.x=Math.random()*800
+star.x=Math.random()*canvas.width
 }
+
 })
 
 }
@@ -91,7 +124,7 @@ ctx.fillStyle="red"
 
 bullets.forEach((b,i)=>{
 
-ctx.fillRect(b.x,b.y,4,10)
+ctx.fillRect(b.x,b.y,4,12)
 
 b.y-=b.speed
 
@@ -113,7 +146,7 @@ ctx.fillRect(e.x,e.y,e.size,e.size)
 
 e.y+=e.speed
 
-// collision
+// bullet collision
 bullets.forEach((b,bi)=>{
 
 if(
@@ -133,8 +166,19 @@ scoreDisplay.innerText=score
 
 })
 
-if(e.y>600){
-enemies.splice(ei,1)
+// player collision
+if(
+player.x < e.x + e.size &&
+player.x + 40 > e.x &&
+player.y < e.y + e.size &&
+player.y + 40 > e.y
+){
+
+gameRunning=false
+canvas.style.display="none"
+hud.style.display="none"
+gameOverUI.style.display="block"
+
 }
 
 })
@@ -147,7 +191,7 @@ if(keys["ArrowLeft"] && player.x>0){
 player.x-=player.speed
 }
 
-if(keys["ArrowRight"] && player.x<760){
+if(keys["ArrowRight"] && player.x<canvas.width-40){
 player.x+=player.speed
 }
 
@@ -155,13 +199,17 @@ player.x+=player.speed
 
 function game(){
 
-ctx.clearRect(0,0,800,600)
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+if(gameRunning){
 
 drawStars()
 movePlayer()
 drawPlayer()
 drawBullets()
 drawEnemies()
+
+}
 
 requestAnimationFrame(game)
 
