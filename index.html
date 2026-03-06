@@ -3,14 +3,24 @@
 <head>
 <title>Space Shooter</title>
 <link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
 
-<h1>🚀 Space Shooter</h1>
-<p>Score: <span id="score">0</span></p>
+<div id="menu">
+<h1>🚀 SPACE SHOOTER</h1>
+<button onclick="startGame()">START GAME</button>
+</div>
 
-<canvas id="gameCanvas" width="800" height="600"></canvas>
+<div id="gameOver">
+<h1>GAME OVER</h1>
+<button onclick="restartGame()">RESTART</button>
+</div>
+
+<div id="hud">Score: <span id="score">0</span></div>
+
+<canvas id="gameCanvas"></canvas>
 
 <script src="script.js"></script>
 
