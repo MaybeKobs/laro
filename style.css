@@ -1,8 +1,8 @@
 body{
 margin:0;
 background:black;
-font-family:Arial;
 color:white;
+font-family:Arial;
 overflow:hidden;
 }
 
@@ -15,16 +15,20 @@ height:100vh;
 display:none;
 }
 
-#menu,#gameOver{
+#menu,#instructions,#gameOver{
 position:absolute;
 top:50%;
 left:50%;
 transform:translate(-50%,-50%);
 text-align:center;
-background:rgba(0,0,0,0.8);
+background:rgba(0,0,0,0.85);
 padding:40px;
-border-radius:10px;
+border-radius:12px;
 border:2px solid cyan;
+}
+
+#instructions{
+display:none;
 }
 
 #gameOver{
@@ -32,7 +36,8 @@ display:none;
 }
 
 button{
-padding:15px 35px;
+padding:12px 30px;
+margin:10px;
 font-size:18px;
 border:none;
 border-radius:6px;
@@ -42,8 +47,32 @@ cursor:pointer;
 
 #hud{
 position:absolute;
-top:15px;
+top:10px;
 left:20px;
-font-size:20px;
+font-size:18px;
 display:none;
+}
+
+.visual{
+display:flex;
+gap:40px;
+justify-content:center;
+flex-wrap:wrap;
+margin:20px;
+}
+
+.controlBox{
+text-align:center;
+}
+
+.keys span{
+background:#111;
+padding:10px 15px;
+border:1px solid cyan;
+margin:4px;
+display:inline-block;
+}
+
+.powerIcon{
+font-size:40px;
 }
