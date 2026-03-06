@@ -1,24 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>Click The Target Game</title>
+<title>Zombie Shooter</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<h1>🎯 Click The Target</h1>
+<h1>🧟 Zombie Shooter</h1>
 
-<div id="scoreBoard">
+<div id="ui">
 Score: <span id="score">0</span> |
-Time: <span id="time">20</span>
+Health: <span id="health">100</span>
 </div>
 
-<button id="startBtn">Start Game</button>
+<div id="gameArea">
+<div id="player"></div>
+</div>
 
-<div id="gameArea"></div>
+<div id="gameOver">GAME OVER</div>
 
 <script src="script.js"></script>
+
 </body>
 </html>
