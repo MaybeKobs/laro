@@ -5,27 +5,64 @@
 <link rel="stylesheet" href="style.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-
 <body>
 
+<!-- MAIN MENU -->
 <div id="menu">
 <h1>GALAXY ASSAULT</h1>
-<button onclick="startGame()">START GAME</button>
+<button onclick="showInstructions()">Before You Play</button>
+<button onclick="startGame()">Start Game</button>
 </div>
 
+<!-- INSTRUCTIONS -->
+<div id="instructions">
+<h2>How To Play</h2>
+
+<div class="visual">
+
+<div class="controlBox">
+<p>MOVE</p>
+<div class="keys">
+<span>⬅</span>
+<span>➡</span>
+</div>
+<p>Drag on mobile</p>
+</div>
+
+<div class="controlBox">
+<p>SHOOT</p>
+<div class="keys">
+<span>SPACE</span>
+</div>
+<p>Tap screen</p>
+</div>
+
+<div class="controlBox">
+<p>POWERUP</p>
+<div class="powerIcon">⚡</div>
+<p>Collect yellow items</p>
+</div>
+
+</div>
+
+<button onclick="backMenu()">Back</button>
+</div>
+
+<!-- GAME OVER -->
 <div id="gameOver">
-<h1>GAME OVER</h1>
-<button onclick="restartGame()">PLAY AGAIN</button>
+<h1>Game Over</h1>
+<button onclick="restartGame()">Play Again</button>
 </div>
 
+<!-- HUD -->
 <div id="hud">
 Score: <span id="score">0</span>
 Level: <span id="level">1</span>
+<span id="bossHealth"></span>
 </div>
 
 <canvas id="gameCanvas"></canvas>
 
 <script src="script.js"></script>
-
 </body>
 </html>
