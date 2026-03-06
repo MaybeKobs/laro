@@ -5,6 +5,9 @@ const menu = document.getElementById("menu")
 const gameOverUI = document.getElementById("gameOver")
 const hud = document.getElementById("hud")
 
+const scoreDisplay = document.getElementById("score")
+const levelDisplay = document.getElementById("level")
+
 function resizeCanvas(){
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight
@@ -13,14 +16,16 @@ canvas.height = window.innerHeight
 resizeCanvas()
 window.addEventListener("resize", resizeCanvas)
 
-let score = 0
-let scoreDisplay = document.getElementById("score")
+let gameRunning=false
 
-let gameRunning = false
+let score=0
+let level=1
 
-let player = {
+let player={
 x:window.innerWidth/2,
-y:window.innerHeight-100,
+y:window.innerHeight-120,
+width:40,
+height:60,
 speed:8
 }
 
@@ -28,11 +33,10 @@ let bullets=[]
 let enemies=[]
 let stars=[]
 
-// stars
 for(let i=0;i<200;i++){
 stars.push({
-x:Math.random()*window.innerWidth,
-y:Math.random()*window.innerHeight,
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
 size:Math.random()*2
 })
 }
@@ -42,18 +46,32 @@ let keys={}
 document.addEventListener("keydown",e=>{
 keys[e.key]=true
 
-if(e.key===" " && gameRunning){
-bullets.push({
-x:player.x+20,
-y:player.y,
-speed:10
-})
+if(e.key===" "){
+shoot()
 }
 })
 
 document.addEventListener("keyup",e=>{
 keys[e.key]=false
 })
+
+/* MOBILE CONTROL */
+canvas.addEventListener("touchmove",e=>{
+let touch=e.touches[0]
+player.x=touch.clientX-player.width/2
+})
+
+canvas.addEventListener("touchstart",shoot)
+
+function shoot(){
+if(!gameRunning) return
+
+bullets.push({
+x:player.x+player.width/2,
+y:player.y,
+speed:10
+})
+}
 
 function startGame(){
 
@@ -68,36 +86,22 @@ function restartGame(){
 location.reload()
 }
 
-// slower enemies
+/* enemy spawn */
+
 setInterval(()=>{
 
-if(gameRunning){
+if(!gameRunning) return
 
 enemies.push({
 x:Math.random()*canvas.width,
 y:-40,
 size:40,
-speed:1
+speed:1 + level*0.5
 })
 
-}
+},1200)
 
-},1500)
-
-function drawPlayer(){
-
-ctx.fillStyle="cyan"
-
-ctx.beginPath()
-
-ctx.moveTo(player.x,player.y)
-ctx.lineTo(player.x+20,player.y-40)
-ctx.lineTo(player.x+40,player.y)
-
-ctx.closePath()
-ctx.fill()
-
-}
+/* stars */
 
 function drawStars(){
 
@@ -107,7 +111,7 @@ stars.forEach(star=>{
 
 ctx.fillRect(star.x,star.y,star.size,star.size)
 
-star.y+=0.7
+star.y+=1
 
 if(star.y>canvas.height){
 star.y=0
@@ -118,13 +122,33 @@ star.x=Math.random()*canvas.width
 
 }
 
+/* spaceship */
+
+function drawPlayer(){
+
+ctx.fillStyle="cyan"
+
+ctx.beginPath()
+
+ctx.moveTo(player.x,player.y+player.height)
+ctx.lineTo(player.x+player.width/2,player.y)
+ctx.lineTo(player.x+player.width,player.y+player.height)
+ctx.lineTo(player.x+player.width/2,player.y+player.height-10)
+
+ctx.closePath()
+ctx.fill()
+
+}
+
+/* bullets */
+
 function drawBullets(){
 
 ctx.fillStyle="red"
 
 bullets.forEach((b,i)=>{
 
-ctx.fillRect(b.x,b.y,4,12)
+ctx.fillRect(b.x,b.y,4,15)
 
 b.y-=b.speed
 
@@ -136,6 +160,8 @@ bullets.splice(i,1)
 
 }
 
+/* enemies */
+
 function drawEnemies(){
 
 ctx.fillStyle="lime"
@@ -146,14 +172,15 @@ ctx.fillRect(e.x,e.y,e.size,e.size)
 
 e.y+=e.speed
 
-// bullet collision
+/* bullet collision */
+
 bullets.forEach((b,bi)=>{
 
 if(
 b.x<e.x+e.size &&
-b.x+4>e.x &&
+b.x>e.x &&
 b.y<e.y+e.size &&
-b.y+10>e.y
+b.y>e.y
 ){
 
 enemies.splice(ei,1)
@@ -162,19 +189,26 @@ bullets.splice(bi,1)
 score++
 scoreDisplay.innerText=score
 
+if(score%10===0){
+level++
+levelDisplay.innerText=level
+}
+
 }
 
 })
 
-// player collision
+/* player collision */
+
 if(
-player.x < e.x + e.size &&
-player.x + 40 > e.x &&
-player.y < e.y + e.size &&
-player.y + 40 > e.y
+player.x < e.x+e.size &&
+player.x+player.width > e.x &&
+player.y < e.y+e.size &&
+player.y+player.height > e.y
 ){
 
 gameRunning=false
+
 canvas.style.display="none"
 hud.style.display="none"
 gameOverUI.style.display="block"
@@ -185,17 +219,21 @@ gameOverUI.style.display="block"
 
 }
 
+/* movement */
+
 function movePlayer(){
 
 if(keys["ArrowLeft"] && player.x>0){
 player.x-=player.speed
 }
 
-if(keys["ArrowRight"] && player.x<canvas.width-40){
+if(keys["ArrowRight"] && player.x<canvas.width-player.width){
 player.x+=player.speed
 }
 
 }
+
+/* game loop */
 
 function game(){
 
