@@ -1,20 +1,19 @@
-const canvas = document.getElementById("gameCanvas")
-const ctx = canvas.getContext("2d")
+const canvas=document.getElementById("gameCanvas")
+const ctx=canvas.getContext("2d")
 
-const menu = document.getElementById("menu")
-const gameOverUI = document.getElementById("gameOver")
-const hud = document.getElementById("hud")
-
-const scoreDisplay = document.getElementById("score")
-const levelDisplay = document.getElementById("level")
-
-function resizeCanvas(){
-canvas.width = window.innerWidth
-canvas.height = window.innerHeight
+function resize(){
+canvas.width=window.innerWidth
+canvas.height=window.innerHeight
 }
+resize()
+window.addEventListener("resize",resize)
 
-resizeCanvas()
-window.addEventListener("resize", resizeCanvas)
+const menu=document.getElementById("menu")
+const gameOverUI=document.getElementById("gameOver")
+const hud=document.getElementById("hud")
+
+const scoreText=document.getElementById("score")
+const levelText=document.getElementById("level")
 
 let gameRunning=false
 
@@ -24,61 +23,54 @@ let level=1
 let player={
 x:window.innerWidth/2,
 y:window.innerHeight-120,
-width:40,
-height:60,
+w:40,
+h:60,
 speed:8
 }
 
 let bullets=[]
 let enemies=[]
+let particles=[]
+
+/* STAR BACKGROUND */
+
 let stars=[]
 
-for(let i=0;i<200;i++){
+for(let i=0;i<250;i++){
 stars.push({
 x:Math.random()*canvas.width,
 y:Math.random()*canvas.height,
-size:Math.random()*2
+size:Math.random()*2,
+speed:Math.random()*1.5
 })
 }
+
+/* CONTROLS */
 
 let keys={}
 
 document.addEventListener("keydown",e=>{
 keys[e.key]=true
-
-if(e.key===" "){
-shoot()
-}
+if(e.key===" ") shoot()
 })
 
 document.addEventListener("keyup",e=>{
 keys[e.key]=false
 })
 
-/* MOBILE CONTROL */
 canvas.addEventListener("touchmove",e=>{
-let touch=e.touches[0]
-player.x=touch.clientX-player.width/2
+let t=e.touches[0]
+player.x=t.clientX-player.w/2
 })
 
 canvas.addEventListener("touchstart",shoot)
 
-function shoot(){
-if(!gameRunning) return
-
-bullets.push({
-x:player.x+player.width/2,
-y:player.y,
-speed:10
-})
-}
+/* GAME CONTROL */
 
 function startGame(){
-
 menu.style.display="none"
 canvas.style.display="block"
 hud.style.display="block"
-
 gameRunning=true
 }
 
@@ -86,7 +78,21 @@ function restartGame(){
 location.reload()
 }
 
-/* enemy spawn */
+/* SHOOT */
+
+function shoot(){
+
+if(!gameRunning) return
+
+bullets.push({
+x:player.x+player.w/2,
+y:player.y,
+speed:12
+})
+
+}
+
+/* ENEMY SPAWN */
 
 setInterval(()=>{
 
@@ -96,33 +102,33 @@ enemies.push({
 x:Math.random()*canvas.width,
 y:-40,
 size:40,
-speed:1 + level*0.5
+speed:1.5+level*0.6
 })
 
 },1200)
 
-/* stars */
+/* DRAW STARS */
 
 function drawStars(){
 
 ctx.fillStyle="white"
 
-stars.forEach(star=>{
+stars.forEach(s=>{
 
-ctx.fillRect(star.x,star.y,star.size,star.size)
+ctx.fillRect(s.x,s.y,s.size,s.size)
 
-star.y+=1
+s.y+=s.speed
 
-if(star.y>canvas.height){
-star.y=0
-star.x=Math.random()*canvas.width
+if(s.y>canvas.height){
+s.y=0
+s.x=Math.random()*canvas.width
 }
 
 })
 
 }
 
-/* spaceship */
+/* PLAYER SHIP */
 
 function drawPlayer(){
 
@@ -130,17 +136,17 @@ ctx.fillStyle="cyan"
 
 ctx.beginPath()
 
-ctx.moveTo(player.x,player.y+player.height)
-ctx.lineTo(player.x+player.width/2,player.y)
-ctx.lineTo(player.x+player.width,player.y+player.height)
-ctx.lineTo(player.x+player.width/2,player.y+player.height-10)
+ctx.moveTo(player.x,player.y+player.h)
+ctx.lineTo(player.x+player.w/2,player.y)
+ctx.lineTo(player.x+player.w,player.y+player.h)
+ctx.lineTo(player.x+player.w/2,player.y+player.h-10)
 
 ctx.closePath()
 ctx.fill()
 
 }
 
-/* bullets */
+/* BULLETS */
 
 function drawBullets(){
 
@@ -148,19 +154,57 @@ ctx.fillStyle="red"
 
 bullets.forEach((b,i)=>{
 
+ctx.shadowColor="red"
+ctx.shadowBlur=10
+
 ctx.fillRect(b.x,b.y,4,15)
+
+ctx.shadowBlur=0
 
 b.y-=b.speed
 
-if(b.y<0){
-bullets.splice(i,1)
-}
+if(b.y<0) bullets.splice(i,1)
 
 })
 
 }
 
-/* enemies */
+/* EXPLOSION PARTICLES */
+
+function createExplosion(x,y){
+
+for(let i=0;i<15;i++){
+particles.push({
+x:x,
+y:y,
+vx:(Math.random()-0.5)*6,
+vy:(Math.random()-0.5)*6,
+life:30
+})
+}
+
+}
+
+function drawParticles(){
+
+ctx.fillStyle="orange"
+
+particles.forEach((p,i)=>{
+
+ctx.fillRect(p.x,p.y,3,3)
+
+p.x+=p.vx
+p.y+=p.vy
+
+p.life--
+
+if(p.life<=0) particles.splice(i,1)
+
+})
+
+}
+
+/* ENEMIES */
 
 function drawEnemies(){
 
@@ -183,15 +227,17 @@ b.y<e.y+e.size &&
 b.y>e.y
 ){
 
+createExplosion(e.x,e.y)
+
 enemies.splice(ei,1)
 bullets.splice(bi,1)
 
 score++
-scoreDisplay.innerText=score
+scoreText.innerText=score
 
-if(score%10===0){
+if(score%12===0){
 level++
-levelDisplay.innerText=level
+levelText.innerText=level
 }
 
 }
@@ -201,14 +247,13 @@ levelDisplay.innerText=level
 /* player collision */
 
 if(
-player.x < e.x+e.size &&
-player.x+player.width > e.x &&
-player.y < e.y+e.size &&
-player.y+player.height > e.y
+player.x<e.x+e.size &&
+player.x+player.w>e.x &&
+player.y<e.y+e.size &&
+player.y+player.h>e.y
 ){
 
 gameRunning=false
-
 canvas.style.display="none"
 hud.style.display="none"
 gameOverUI.style.display="block"
@@ -219,7 +264,7 @@ gameOverUI.style.display="block"
 
 }
 
-/* movement */
+/* MOVE PLAYER */
 
 function movePlayer(){
 
@@ -227,13 +272,13 @@ if(keys["ArrowLeft"] && player.x>0){
 player.x-=player.speed
 }
 
-if(keys["ArrowRight"] && player.x<canvas.width-player.width){
+if(keys["ArrowRight"] && player.x<canvas.width-player.w){
 player.x+=player.speed
 }
 
 }
 
-/* game loop */
+/* GAME LOOP */
 
 function game(){
 
@@ -246,6 +291,7 @@ movePlayer()
 drawPlayer()
 drawBullets()
 drawEnemies()
+drawParticles()
 
 }
 
@@ -253,4 +299,5 @@ requestAnimationFrame(game)
 
 }
 
+game()
 game()
