@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Space Shooter</title>
+<title>Galaxy Shooter</title>
 <link rel="stylesheet" href="style.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -9,8 +9,8 @@
 <body>
 
 <div id="menu">
-<h1>🤍TAMORAN MO SILA🤍</h1>
-<button onclick="startGame()">START GAME</button>
+<h1>GALAXY SHOOTER</h1>
+<button onclick="startGame()">START</button>
 </div>
 
 <div id="gameOver">
@@ -18,7 +18,10 @@
 <button onclick="restartGame()">RESTART</button>
 </div>
 
-<div id="hud">Score: <span id="score">0</span></div>
+<div id="hud">
+Score: <span id="score">0</span> |
+Level: <span id="level">1</span>
+</div>
 
 <canvas id="gameCanvas"></canvas>
 
