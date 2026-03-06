@@ -1,64 +1,146 @@
-let score = 0
-let time = 20
-let gameInterval
-let timerInterval
-
-const scoreDisplay = document.getElementById("score")
-const timeDisplay = document.getElementById("time")
 const gameArea = document.getElementById("gameArea")
-const startBtn = document.getElementById("startBtn")
+const player = document.getElementById("player")
 
-startBtn.addEventListener("click", startGame)
+const scoreText = document.getElementById("score")
+const healthText = document.getElementById("health")
+const gameOverText = document.getElementById("gameOver")
 
-function startGame(){
+let score = 0
+let health = 100
 
-    score = 0
-    time = 20
+let playerX = 380
+let playerY = 230
 
-    scoreDisplay.textContent = score
-    timeDisplay.textContent = time
+let keys = {}
 
-    clearInterval(gameInterval)
-    clearInterval(timerInterval)
+document.addEventListener("keydown", e => keys[e.key] = true)
+document.addEventListener("keyup", e => keys[e.key] = false)
 
-    spawnTarget()
+function movePlayer(){
 
-    gameInterval = setInterval(spawnTarget, 800)
+if(keys["w"]) playerY -= 4
+if(keys["s"]) playerY += 4
+if(keys["a"]) playerX -= 4
+if(keys["d"]) playerX += 4
 
-    timerInterval = setInterval(() => {
+playerX = Math.max(0, Math.min(760, playerX))
+playerY = Math.max(0, Math.min(460, playerY))
 
-        time--
-        timeDisplay.textContent = time
+player.style.left = playerX + "px"
+player.style.top = playerY + "px"
 
-        if(time <= 0){
-            clearInterval(gameInterval)
-            clearInterval(timerInterval)
-            alert("Game Over! Your score: " + score)
-        }
-
-    },1000)
 }
 
-function spawnTarget(){
+setInterval(movePlayer,20)
 
-    const target = document.createElement("div")
-    target.classList.add("target")
+gameArea.addEventListener("click", e => {
 
-    const x = Math.random() * 450
-    const y = Math.random() * 350
+const bullet = document.createElement("div")
+bullet.classList.add("bullet")
 
-    target.style.left = x + "px"
-    target.style.top = y + "px"
+let bulletX = playerX + 15
+let bulletY = playerY + 15
 
-    target.onclick = function(){
-        score++
-        scoreDisplay.textContent = score
-        target.remove()
-    }
+bullet.style.left = bulletX + "px"
+bullet.style.top = bulletY + "px"
 
-    gameArea.appendChild(target)
+gameArea.appendChild(bullet)
 
-    setTimeout(()=>{
-        target.remove()
-    },700)
+const rect = gameArea.getBoundingClientRect()
+
+const targetX = e.clientX - rect.left
+const targetY = e.clientY - rect.top
+
+const angle = Math.atan2(targetY - bulletY, targetX - bulletX)
+
+const speed = 8
+
+const moveBullet = setInterval(()=>{
+
+bulletX += Math.cos(angle) * speed
+bulletY += Math.sin(angle) * speed
+
+bullet.style.left = bulletX + "px"
+bullet.style.top = bulletY + "px"
+
+if(bulletX < 0 || bulletX > 800 || bulletY < 0 || bulletY > 500){
+bullet.remove()
+clearInterval(moveBullet)
+}
+
+document.querySelectorAll(".zombie").forEach(zombie => {
+
+const zx = zombie.offsetLeft
+const zy = zombie.offsetTop
+
+if(Math.abs(bulletX - zx) < 30 && Math.abs(bulletY - zy) < 30){
+
+score++
+scoreText.textContent = score
+
+zombie.remove()
+bullet.remove()
+clearInterval(moveBullet)
+
+}
+
+})
+
+},20)
+
+})
+
+function spawnZombie(){
+
+const zombie = document.createElement("div")
+zombie.classList.add("zombie")
+
+let zx = Math.random()*760
+let zy = -40
+
+zombie.style.left = zx + "px"
+zombie.style.top = zy + "px"
+
+gameArea.appendChild(zombie)
+
+const move = setInterval(()=>{
+
+const px = player.offsetLeft
+const py = player.offsetTop
+
+const angle = Math.atan2(py - zy, px - zx)
+
+zx += Math.cos(angle) * 1.5
+zy += Math.sin(angle) * 1.5
+
+zombie.style.left = zx + "px"
+zombie.style.top = zy + "px"
+
+if(Math.abs(px - zx) < 30 && Math.abs(py - zy) < 30){
+
+health -= 10
+healthText.textContent = health
+
+zombie.remove()
+clearInterval(move)
+
+if(health <= 0){
+endGame()
+}
+
+}
+
+},30)
+
+}
+
+setInterval(spawnZombie,1500)
+
+function endGame(){
+
+document.querySelectorAll(".zombie").forEach(z => z.remove())
+document.querySelectorAll(".bullet").forEach(b => b.remove())
+
+gameOverText.style.display = "block"
+
 }
