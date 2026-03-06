@@ -1,8 +1,8 @@
 body{
 margin:0;
 background:black;
-color:white;
 font-family:Arial;
+color:white;
 overflow:hidden;
 }
 
@@ -27,11 +27,15 @@ border-radius:10px;
 border:2px solid cyan;
 }
 
+#gameOver{
+display:none;
+}
+
 button{
 padding:15px 35px;
 font-size:18px;
 border:none;
-border-radius:5px;
+border-radius:6px;
 background:cyan;
 cursor:pointer;
 }
