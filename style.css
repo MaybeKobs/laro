@@ -1,12 +1,47 @@
 body{
+margin:0;
+overflow:hidden;
 background:black;
 color:white;
-text-align:center;
 font-family:Arial;
 }
 
 canvas{
-border:2px solid white;
-background:black;
-box-shadow:0 0 20px cyan;
+position:absolute;
+top:0;
+left:0;
+width:100vw;
+height:100vh;
+display:none;
+}
+
+#menu,#gameOver{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+text-align:center;
+background:#111;
+padding:40px;
+border:2px solid cyan;
+}
+
+#gameOver{
+display:none;
+}
+
+button{
+padding:15px 30px;
+font-size:20px;
+background:cyan;
+border:none;
+cursor:pointer;
+}
+
+#hud{
+position:absolute;
+top:10px;
+left:20px;
+font-size:22px;
+display:none;
 }
