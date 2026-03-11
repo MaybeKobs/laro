@@ -2,16 +2,74 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Galaxy Assault</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galaxy Assault Ultra</title>
 <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div id="score">Score: 0</div>
-<canvas id="gameCanvas" width="800" height="600"></canvas>
+<!-- Home Menu -->
+<div id="menu" class="menu">
+    <canvas id="menuStars"></canvas>
+    <h1 class="title">GALAXY ASSAULT</h1>
+    <div class="floating-planets">
+        <div class="planet" style="--size:50px; --color:#ff0040; --x:100px; --y:100px;"></div>
+        <div class="planet" style="--size:30px; --color:#00ffcc; --x:600px; --y:200px;"></div>
+        <div class="planet" style="--size:40px; --color:#ffff00; --x:300px; --y:400px;"></div>
+    </div>
+    <button class="menu-btn" onclick="startGame()">START GAME</button>
+    <button class="menu-btn" onclick="showSettings()">SETTINGS</button>
+    <button class="menu-btn" onclick="showCredits()">CREDITS</button>
+</div>
+
+<!-- Settings -->
+<div id="settings" class="menu" style="display:none;">
+    <h1>SETTINGS</h1>
+    <label>Player Speed <input type="range" id="playerSpeed" min="5" max="20" value="10"></label>
+    <label>Enemy Speed <input type="range" id="enemySpeed" min="1" max="5" value="1.5"></label>
+    <button class="menu-btn" onclick="backToMenu()">BACK</button>
+</div>
+
+<!-- Credits -->
+<div id="credits" class="menu" style="display:none;">
+    <h1>CREDITS</h1>
+    <p>Created by Kobe Litonjua</p>
+    <p>Inspired by Galaga</p>
+    <button class="menu-btn" onclick="backToMenu()">BACK</button>
+</div>
+
+<!-- Pause Menu -->
+<div id="pauseMenu" class="menu" style="display:none;">
+    <h1>PAUSED</h1>
+    <button class="menu-btn" onclick="resumeGame()">RESUME</button>
+    <button class="menu-btn" onclick="backToMenu()">MAIN MENU</button>
+</div>
+
+<!-- HUD -->
+<div class="hud">
+    <div id="score">0</div>
+    <div id="livesDisplay">Lives: </div>
+    <div id="level">1</div>
+</div>
+
+<!-- Game Canvas -->
+<canvas id="gameCanvas" width="900" height="600"></canvas>
+
+<!-- Mobile Controls -->
+<div class="mobile-controls">
+    <button id="leftBtn">◀</button>
+    <button id="shootBtn">▲</button>
+    <button id="rightBtn">▶</button>
+</div>
+
+<!-- Audio -->
+<audio id="bgMusic" loop>
+    <source src="assets/music/background.mp3" type="audio/mpeg">
+</audio>
+<audio id="laserSound">
+    <source src="assets/sfx/laser.mp3" type="audio/mpeg">
+</audio>
 
 <script src="script.js"></script>
-
 </body>
 </html>
