@@ -1,78 +1,20 @@
 body{
-margin:0;
-background:black;
-color:white;
-font-family:Arial;
-overflow:hidden;
+    margin:0;
+    background:black;
+    overflow:hidden;
+    font-family:Arial;
+}
+
+#score{
+    position:absolute;
+    top:10px;
+    left:10px;
+    color:white;
+    font-size:20px;
 }
 
 canvas{
-position:absolute;
-top:0;
-left:0;
-width:100vw;
-height:100vh;
-display:none;
-}
-
-#menu,#instructions,#gameOver{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-text-align:center;
-background:rgba(0,0,0,0.85);
-padding:40px;
-border-radius:12px;
-border:2px solid cyan;
-}
-
-#instructions{
-display:none;
-}
-
-#gameOver{
-display:none;
-}
-
-button{
-padding:12px 30px;
-margin:10px;
-font-size:18px;
-border:none;
-border-radius:6px;
-background:cyan;
-cursor:pointer;
-}
-
-#hud{
-position:absolute;
-top:10px;
-left:20px;
-font-size:18px;
-display:none;
-}
-
-.visual{
-display:flex;
-gap:40px;
-justify-content:center;
-flex-wrap:wrap;
-margin:20px;
-}
-
-.controlBox{
-text-align:center;
-}
-
-.keys span{
-background:#111;
-padding:10px 15px;
-border:1px solid cyan;
-margin:4px;
-display:inline-block;
-}
-
-.powerIcon{
-font-size:40px;
+    display:block;
+    margin:auto;
+    background:black;
 }
