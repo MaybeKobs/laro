@@ -1,188 +1,62 @@
-body{
-margin:0;
-padding:0;
-font-family:'Orbitron',sans-serif;
-background:radial-gradient(circle at center,#020214,#000);
-color:white;
-overflow:hidden;
+body {
+    margin:0;
+    overflow:hidden;
+    font-family:sans-serif;
+    background:#111;
 }
 
-.menu{
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-background:rgba(0,0,0,0.85);
-backdrop-filter:blur(6px);
-z-index:10;
+canvas {
+    display:block;
+    margin:auto;
+    border:2px solid #fff;
 }
 
-.title{
-font-size:4rem;
-letter-spacing:5px;
-color:#00ffff;
-
-text-shadow:
-0 0 10px cyan,
-0 0 30px #00f;
-
-animation:titleGlow 2s infinite alternate;
+#startMenu, #gameOverMenu {
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    color:white;
+    text-align:center;
 }
 
-@keyframes titleGlow{
-from{ text-shadow:0 0 10px cyan;}
-to{ text-shadow:0 0 40px #00f;}
+#startMenu button, #gameOverMenu button {
+    font-size:25px;
+    padding:10px 20px;
+    margin:10px;
+    border:none;
+    border-radius:10px;
+    background: rgba(255,255,255,0.3);
+    color:#fff;
+}
+#startMenu button:active, #gameOverMenu button:active {
+    background: rgba(255,255,255,0.6);
 }
 
-.menu-btn{
-
-padding:14px 40px;
-margin:12px;
-
-font-size:1.3rem;
-
-border:none;
-border-radius:10px;
-
-cursor:pointer;
-
-background:linear-gradient(45deg,#00e5ff,#0066ff);
-
-box-shadow:0 0 15px cyan;
-
-transition:.3s;
-
+#hud {
+    position:absolute;
+    top:10px;
+    left:10px;
+    color:#fff;
+    font-size:20px;
 }
 
-.menu-btn:hover{
-
-transform:scale(1.15);
-
-box-shadow:0 0 30px cyan;
-
+#controls {
+    position:absolute;
+    bottom:20px;
+    width:100%;
+    text-align:center;
 }
 
-.hud{
-
-position:absolute;
-top:0;
-left:0;
-
-width:100%;
-
-display:flex;
-justify-content:space-between;
-
-padding:10px 30px;
-
-font-size:1.2rem;
-
-z-index:5;
-
-background:linear-gradient(to bottom,rgba(0,0,50,.8),transparent);
-
+#controls button {
+    font-size:30px;
+    margin:0 20px;
+    padding:10px 20px;
+    border:none;
+    border-radius:10px;
+    background: rgba(255,255,255,0.3);
+    color:#fff;
 }
-
-.life{
-
-color:#00ff88;
-margin-left:3px;
-
-}
-
-#gameCanvas{
-
-display:block;
-margin:auto;
-
-border:2px solid cyan;
-
-box-shadow:
-0 0 20px #00f,
-0 0 40px cyan inset;
-
-background:black;
-
-}
-
-.mobile-controls{
-
-position:absolute;
-bottom:20px;
-
-width:100%;
-
-display:flex;
-justify-content:center;
-
-gap:25px;
-
-z-index:5;
-
-}
-
-.mobile-controls button{
-
-padding:18px 30px;
-
-font-size:1.5rem;
-
-border:none;
-
-border-radius:14px;
-
-background:linear-gradient(45deg,#00f,#0ff);
-
-color:white;
-
-box-shadow:0 0 15px cyan;
-
-}
-
-.mobile-controls button:active{
-transform:scale(.9);
-}
-
-.floating-planets .planet{
-
-position:absolute;
-
-border-radius:50%;
-
-width:var(--size);
-height:var(--size);
-
-background:radial-gradient(circle,var(--color),black);
-
-opacity:.7;
-
-top:var(--y);
-left:var(--x);
-
-animation:planetFloat 20s infinite linear;
-
-}
-
-@keyframes planetFloat{
-
-0%{ transform:translateY(0) rotate(0deg);}
-
-50%{ transform:translateY(-40px) rotate(180deg);}
-
-100%{ transform:translateY(0) rotate(360deg);}
-
-}
-
-#menuStars{
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-z-index:-1;
+#controls button:active {
+    background: rgba(255,255,255,0.6);
 }
